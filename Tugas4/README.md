@@ -1,9 +1,5 @@
 # BLTFuzzyLogic
 
-```
-This readme is not done, and will be continued when I got the desire to.
-```
-
 Kode sederhana ini merupakan implementasi penggunaan Fuzzy Logic untuk menyelesaikan tugas sederhana. Tugasnya adalah, diberi data di 'DataTugas2.csv'
 yang meliputi 100 data pendapatan dan hutang seseorang, kita harus memilih 20 diantaranya untuk diberikan BLT (Bantuan Langsung Tunai) atau untuk sederhananya
 mengatakannya dalam bahasa Inggris, bantuan tunai langsung. Outputnya berupa file 'TebakanTugas2.csv' yang berisi 20 baris angka (nomor urut orang di 'DataTugas2.csv')
