@@ -1,19 +1,5 @@
 import csv
-
-#  1. LINGUISTIC
-#
-#     Income      |      LOW(L)      BELOW AVERAGE(B)       AVERAGE(A)      HIGH(H)
-#     Debt        |      FEW(F)      NORMAL(N)       MUCH(M)
-#     ------------
-#     Acceptance  |      YES        MAYBE       NO
-
-#  2. MEMBERSHIP FUNCTION
-#     Ada pada laporan
-
-#  3. FUZZIFICATION
-
-#  INCOME SCORE CALCULATION
-def lowIncome(x):  # For low income
+def lowIncome(x):  # Untuk berpenghasilan rendah
     if x <= 0.3:
         return 1
     elif x >= 0.8:
@@ -22,7 +8,7 @@ def lowIncome(x):  # For low income
         return (0.8 - x) / (0.8 - 0.3)
 
 
-def baIncome(x):  # For below average income
+def baIncome(x):  # Untuk pendapatan di bawah rata-rata
     if 0.6 <= x <= 1:
         return 1
     elif 0.4 < x < 0.6:
@@ -33,7 +19,7 @@ def baIncome(x):  # For below average income
         return 0
 
 
-def avIncome(x):  # For average income
+def avIncome(x):  # Untuk pendapatan rata-rata
     if 1.0 <= x <= 1.4:
         return 1
     elif 0.8 < x < 1.0:
@@ -44,7 +30,7 @@ def avIncome(x):  # For average income
         return 0
 
 
-def highIncome(x):  # For high income
+def highIncome(x):  # Untuk berpenghasilan tinggi
     if x >= 1.7:
         return 1
     elif x <= 1.2:
@@ -61,7 +47,7 @@ def incomeValue(x):
     return L, B, A, H
 
 
-# DEBT SCORE CALCULATION
+# PERHITUNGAN SKOR HUTANG
 def fewDebt(y):  # Few debts
     if y <= 30:
         return 1
@@ -71,7 +57,7 @@ def fewDebt(y):  # Few debts
         return (50 - y) / (50 - 30)
 
 
-def normalDebt(y):  # Normal debts
+def normalDebt(y):  # Hutang normal
     if 50 <= y <= 70:
         return 1
     elif 30 < y < 50:
@@ -82,7 +68,7 @@ def normalDebt(y):  # Normal debts
         return 0
 
 
-def muchDebt(y):  # Much debts
+def muchDebt(y):  # Banyak hutang
     if y >= 80:
         return 1
     elif y <= 60:
@@ -98,7 +84,7 @@ def debtValue(y):
     return F, N, M
 
 
-# 4. RULE
+# 4.ATURAN
 
 # INCOME            DEBTS           ACCEPTANCE
 # L                 F               MAYBE
@@ -115,7 +101,8 @@ def debtValue(y):
 # H                 M               MAYBE
 
 
-# 5. INFERENCE
+# 5. KESIMPULAN
+
 def inference(L, B, A, H, F, N, M):
     R = [[min(L, F), 'M'], [min(B, F), 'M'], [min(A, F), 'N'], [min(H, F), 'N'], [min(L, N), 'Y'], [min(B, N), 'M'],
          [min(A, N), 'M'], [min(H, N), 'N'], [min(L, M), 'Y'], [min(B, M), 'Y'], [min(A, M), 'M'], [min(H, M), 'M']]
@@ -132,39 +119,39 @@ def inference(L, B, A, H, F, N, M):
     return max(yes), max(maybe), max(no)
 
 
-#  6.DEFUZZIFICATION
+#  6.DEFUZIFIKASI
 def sugenoDefuz(yes, no, maybe):                            # Constant values are set to 87, 70, and 52
     return ((yes * 87) + (maybe * 70) + (no * 52)) / (yes + maybe + no)
 
 
-#  7. MAIN PROGRAM
-income = []                                                 # Initialize the 'income' array
-debt = []                                                   # Initialize the 'debt' array
-bltScore = []                                               # Initialize the 'bltScore' array
-bltFinal = []                                               # Initialize the 'bltFinal' array
+#  7. PROGRAM UTAMA
+income = []                                                 # Inisialisasi array 'income'
+debt = []                                                   # Imenginisialisasi array 'hutang'
+bltScore = []                                               # Inisialisasi array 'bltScore'
+bltFinal = []                                               # Inisialisasi array 'bltFinal'
 
-with open('DataTugas2.csv', mode='r') as csv_input:         # Input from DataTugas2.csv file
+with open('DataTugas2.csv', mode='r') as csv_input:         # Masukan dari file DataTugas2.csv
     bltData = csv.reader(csv_input)
-    next(bltData)                                           # Skip the first row
+    next(bltData)                                           # Lewati baris pertama
     for row in bltData:
-        income.append(float(row[1]))                        # Insert second column to 'income' array
-        debt.append(float(row[2]))                          # Insert third column to 'debt' array
+        income.append(float(row[1]))                        # Masukkan kolom kedua ke larik 'pendapatan'
+        debt.append(float(row[2]))                          # Masukkan kolom ketiga ke array 'hutang'
 
-for i in range(len(income)):                                # Looping for every person
-    L, B, A, H = incomeValue(income[i])                     # Calculate the score for income categories
-    F, N, M = debtValue(debt[i])                            # Calculate the score for debt categories
-    yes, maybe, no = inference(L, B, A, H, F, N, M)         # Calculate the score for acceptance categories
-    score = sugenoDefuz(yes, no, maybe)                     # Calculate the final score
-    bltScore.append([score, (i + 1)])                       # Insert the final scores to array
-bltScore.sort(reverse=True)                                 # Sort the scores array
+for i in range(len(income)):                                # Pendauran untuk setiap orang
+    L, B, A, H = incomeValue(income[i])                     # Hitung skor untuk kategori pendapatan 
+    F, N, M = debtValue(debt[i])                            # Hitung skor untuk kategori hutang
+    yes, maybe, no = inference(L, B, A, H, F, N, M)         # Hitung skor untuk kategori penerimaan
+    score = sugenoDefuz(yes, no, maybe)                     # Hitung skor akhir
+    bltScore.append([score, (i + 1)])                       # Masukkan skor akhir ke larik
+bltScore.sort(reverse=True)                                 # Urutkan larik skor
 
-for i in range(0, 20):                                      # Loop for 20 datas
-    bltFinal.append(bltScore[i][1])                         # Insert the accepted person's numbers to array
+for i in range(0, 20):                                      # Ulangi untuk 20 data
+    bltFinal.append(bltScore[i][1])                         # Masukkan nomor orang yang diterima ke larik
 
-with open('TebakanTugas2.csv', mode="w") as csv_output:     # Output to *.csv file
+with open('TebakanTugas2.csv', mode="w") as csv_output:     # Output ke file * .csv
     bltOut = csv.writer(csv_output, lineterminator='\n')
-    for data in bltFinal:                                   # Looping for every data in 'bltFinal' array
-        bltOut.writerow([data])                             # Write data to *.csv file
+    for data in bltFinal:                                   # Perulangan untuk setiap data dalam larik 'bltFinal'
+        bltOut.writerow([data])                             # Tulis data ke file * .csv
 
 print(income)
 print(debt)
